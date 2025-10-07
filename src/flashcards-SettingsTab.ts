@@ -33,7 +33,7 @@ export class SimpleFlashcardsSettingsTab extends PluginSettingTab {
         const { containerEl } = this;
         containerEl.empty();
 
-        containerEl.createEl("h2", { text: "Simple Flashcards Settings" });
+        new Setting(containerEl).setHeading().setName("Simple Flashcards");
 
         new Setting(containerEl)
             .setName("Save Settings")
@@ -138,15 +138,15 @@ export class SimpleFlashcardsSettingsTab extends PluginSettingTab {
                     }),
             );
 
-        containerEl.createEl("h3", { text: "Usage" });
-        const usage = containerEl.createEl("div");
-        usage.createEl("p", {
+        new Setting(containerEl).setHeading().setName("Usage");
+
+        containerEl.createEl("p", {
             text: "Cards are created from markdown files with H2 headings (##). Each heading becomes one card.",
         });
-        usage.createEl("p", {
+        containerEl.createEl("p", {
             text: "Use --- (horizontal rule) to mark the end of card content. Anything after --- will be ignored.",
         });
-        usage.createEl("p", {
+        containerEl.createEl("p", {
             text: "Lines starting with #flashcards will be stripped from card display.",
         });
     }
