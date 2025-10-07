@@ -6,7 +6,6 @@ export class FlashcardModal extends Modal {
     plugin: SimpleFlashcardsPlugin;
     card: Card | null;
     deckPath: string | undefined;
-    contentEl: HTMLElement;
 
     constructor(
         app: App,

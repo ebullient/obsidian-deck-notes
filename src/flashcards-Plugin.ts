@@ -42,8 +42,10 @@ export default class SimpleFlashcardsPlugin extends Plugin {
             },
         });
 
-        // Initial card scan
-        await this.scanCards();
+        // Defer initial card scan to avoid blocking startup
+        this.app.workspace.onLayoutReady(async () => {
+            await this.scanCards();
+        });
     }
 
     onunload() {
@@ -51,12 +53,9 @@ export default class SimpleFlashcardsPlugin extends Plugin {
     }
 
     async loadSettings() {
-        this.settings = Object.assign(
-            {},
-            DEFAULT_SETTINGS,
-            await this.loadData(),
-        );
-        this.data = (await this.loadData()) || { cardViews: {} };
+        const data = await this.loadData();
+        this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
+        this.data = data || { cardViews: {} };
     }
 
     async saveSettings() {
@@ -113,7 +112,7 @@ export default class SimpleFlashcardsPlugin extends Plugin {
         }
 
         // least-recent: sort by lastSeen timestamp
-        const sorted = pool.sort((a, b) => {
+        const sorted = pool.slice().sort((a, b) => {
             const aTime = this.data.cardViews[a.key] || 0;
             const bTime = this.data.cardViews[b.key] || 0;
             return aTime - bTime;
@@ -130,7 +129,12 @@ export default class SimpleFlashcardsPlugin extends Plugin {
         });
     }
 
-    showRandomCard() {
+    async showRandomCard() {
+        // Lazy load cards if not yet scanned
+        if (this.cachedCards.length === 0) {
+            await this.scanCards();
+        }
+
         const deckPath = this.settings.defaultDeckPath || undefined;
         const card = this.selectCard(deckPath);
 
