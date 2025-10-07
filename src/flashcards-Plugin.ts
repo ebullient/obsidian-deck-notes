@@ -1,9 +1,10 @@
-import { Notice, Plugin, TFile, TFolder } from "obsidian";
+import { type Editor, Notice, Plugin, TFile, TFolder } from "obsidian";
 import type {
     Card,
     SimpleFlashcardsData,
     SimpleFlashcardsSettings,
 } from "./@types/settings";
+import { SimpleFlashcardsApi } from "./flashcards-Api";
 import { CardParser } from "./flashcards-CardParser";
 import { DEFAULT_SETTINGS } from "./flashcards-Constants";
 import { FlashcardModal } from "./flashcards-Modal";
@@ -14,6 +15,7 @@ export default class SimpleFlashcardsPlugin extends Plugin {
     data!: SimpleFlashcardsData;
     cachedCards: Card[] = [];
     cardParser!: CardParser;
+    api!: SimpleFlashcardsApi;
 
     async onload() {
         console.log("Loading Simple Flashcards plugin");
@@ -23,33 +25,54 @@ export default class SimpleFlashcardsPlugin extends Plugin {
 
         this.addSettingTab(new SimpleFlashcardsSettingsTab(this.app, this));
 
-        // Command: Show Random Activity Card
-        this.addCommand({
-            id: "show-random-card",
-            name: "Show Random Activity Card",
-            callback: () => {
-                this.showRandomCard();
-            },
-        });
-
-        // Command: Refresh Activity Cards
-        this.addCommand({
-            id: "refresh-cards",
-            name: "Refresh Activity Cards",
-            callback: async () => {
-                await this.scanCards();
-                new Notice("Activity cards refreshed");
-            },
-        });
-
-        // Defer initial card scan to avoid blocking startup
+        // Defer initial card scan, API, and command registration to avoid blocking startup
         this.app.workspace.onLayoutReady(async () => {
             await this.scanCards();
+
+            // Initialize API
+            this.api = new SimpleFlashcardsApi(this);
+            if (!window.simpleFlashcards) {
+                window.simpleFlashcards = {};
+            }
+            window.simpleFlashcards.api = this.api;
+
+            // Command: Show Random Activity Card
+            this.addCommand({
+                id: "show-random-card",
+                name: "Show Activity Card",
+                callback: () => {
+                    this.showRandomCard();
+                },
+            });
+
+            // Command: Embed Random Card
+            this.addCommand({
+                id: "embed-card",
+                name: "Embed Activity Card",
+                editorCallback: (editor) => {
+                    this.insertCardEmbed(editor);
+                },
+            });
+
+            // Command: Refresh Activity Cards
+            this.addCommand({
+                id: "refresh-cards",
+                name: "Refresh Activity Cards",
+                callback: async () => {
+                    await this.scanCards();
+                    new Notice("Activity cards refreshed");
+                },
+            });
         });
     }
 
     onunload() {
         console.log("Unloading Simple Flashcards plugin");
+
+        // Clear API reference
+        if (window.simpleFlashcards) {
+            window.simpleFlashcards.api = undefined;
+        }
     }
 
     async loadSettings() {
@@ -129,12 +152,7 @@ export default class SimpleFlashcardsPlugin extends Plugin {
         });
     }
 
-    async showRandomCard() {
-        // Lazy load cards if not yet scanned
-        if (this.cachedCards.length === 0) {
-            await this.scanCards();
-        }
-
+    showRandomCard() {
         const deckPath = this.settings.defaultDeckPath || undefined;
         const card = this.selectCard(deckPath);
 
@@ -144,5 +162,42 @@ export default class SimpleFlashcardsPlugin extends Plugin {
         }
 
         new FlashcardModal(this.app, this, card, deckPath).open();
+    }
+
+    getCardEmbedText(): string | null {
+        const deckPath = this.settings.defaultDeckPath || undefined;
+        const card = this.selectCard(deckPath);
+
+        if (!card) {
+            return null;
+        }
+
+        // Create collapsible callout with card content
+        const contentLines = card.content
+            .split("\n")
+            .map((line) => `> ${line}`);
+
+        const embedText = [
+            `> [!${this.settings.calloutType}]+ ${card.heading}`,
+            ...contentLines,
+        ].join("\n");
+
+        // Record as viewed
+        if (this.settings.trackViews) {
+            this.recordView(card.key);
+        }
+
+        return embedText;
+    }
+
+    insertCardEmbed(editor: Editor) {
+        const embedText = this.getCardEmbedText();
+
+        if (!embedText) {
+            new Notice("No cards available. Check your settings.");
+            return;
+        }
+
+        editor.replaceSelection(embedText);
     }
 }

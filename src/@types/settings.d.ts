@@ -10,6 +10,7 @@ export interface SimpleFlashcardsSettings {
     defaultDeckPath: string; // Default path for quick command
     trackViews: boolean; // Enable view tracking
     selectionMode: "random" | "least-recent";
+    calloutType: string; // Callout type for embedded cards (e.g., "readaloud")
 }
 
 export interface SimpleFlashcardsData {

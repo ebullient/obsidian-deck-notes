@@ -5,4 +5,5 @@ export const DEFAULT_SETTINGS: SimpleFlashcardsSettings = {
     defaultDeckPath: "",
     trackViews: true,
     selectionMode: "least-recent",
+    calloutType: "tip",
 };

@@ -124,6 +124,20 @@ export class SimpleFlashcardsSettingsTab extends PluginSettingTab {
                     }),
             );
 
+        new Setting(containerEl)
+            .setName("Callout Type")
+            .setDesc(
+                "Callout type for embedded cards (e.g., note, tip, warning)",
+            )
+            .addText((text) =>
+                text
+                    .setPlaceholder("readaloud")
+                    .setValue(this.newSettings.calloutType)
+                    .onChange((value) => {
+                        this.newSettings.calloutType = value.trim();
+                    }),
+            );
+
         containerEl.createEl("h3", { text: "Usage" });
         const usage = containerEl.createEl("div");
         usage.createEl("p", {
