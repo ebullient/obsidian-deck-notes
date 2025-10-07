@@ -1,0 +1,43 @@
+{
+  "name": "simple-flashcards",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Simple flashcard plugin for Obsidian (https://obsidian.md)",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "fix": "npx @biomejs/biome check --write ./src",
+    "format": "npx @biomejs/biome format ./src",
+    "lint": "npx @biomejs/biome lint ./src",
+    "prebuild": "npx @biomejs/biome check ./src",
+    "build": "node esbuild.config.mjs production",
+    "postbuild": "cp -v manifest.json README.md build",
+    "preversion": "npm run build",
+    "version": "auto-changelog -p"
+  },
+  "keywords": [
+    "obsidian",
+    "obsidian-md",
+    "obsidian-plugin",
+    "obsidian-md-plugin",
+    "flashcards"
+  ],
+  "author": "ebullient",
+  "repository": "github.com:ebullient/obsidian-flashcards",
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "2.2.3",
+    "@types/node": "^24.3.1",
+    "auto-changelog": "^2.5.0",
+    "builtin-modules": "^5.0.0",
+    "esbuild": "^0.25.9",
+    "obsidian": "^1.8.7",
+    "tslib": "^2.8.1",
+    "typescript": "5.9.2"
+  },
+  "auto-changelog": {
+    "backfillLimit": false,
+    "commitLimit": false,
+    "ignoreCommitPattern": "(🔖|🔨|🧹|changelog|release|Update README).*"
+  }
+}
