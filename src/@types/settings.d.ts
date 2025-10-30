@@ -1,4 +1,5 @@
 export interface Card {
+    hash: number;
     filePath: string;
     heading: string;
     content: string;

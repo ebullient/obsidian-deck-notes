@@ -36,31 +36,31 @@ export default class SimpleFlashcardsPlugin extends Plugin {
             }
             window.simpleFlashcards.api = this.api;
 
-            // Command: Show Random Activity Card
+            // Command: Show Random Card
             this.addCommand({
-                id: "show-random-card",
-                name: "Show Activity Card",
+                id: "show-card",
+                name: "Show Card",
                 callback: () => {
-                    this.showRandomCard();
+                    this.showFlashCard();
                 },
             });
 
-            // Command: Embed Random Card
+            // Command: Embed Card
             this.addCommand({
                 id: "embed-card",
-                name: "Embed Activity Card",
+                name: "Embed Card",
                 editorCallback: (editor) => {
-                    this.insertCardEmbed(editor);
+                    this.embedCard(editor);
                 },
             });
 
-            // Command: Refresh Activity Cards
+            // Command: Refresh Cards
             this.addCommand({
                 id: "refresh-cards",
-                name: "Refresh Activity Cards",
+                name: "Refresh Cards",
                 callback: async () => {
                     await this.scanCards();
-                    new Notice("Activity cards refreshed");
+                    new Notice("Flash cards refreshed");
                 },
             });
         });
@@ -130,18 +130,20 @@ export default class SimpleFlashcardsPlugin extends Plugin {
             return null;
         }
 
-        if (this.settings.selectionMode === "random") {
-            return pool[Math.floor(Math.random() * pool.length)];
-        }
-
         // least-recent: sort by lastSeen timestamp
         const sorted = pool.slice().sort((a, b) => {
             const aTime = this.data.cardViews[a.key] || 0;
             const bTime = this.data.cardViews[b.key] || 0;
+            if (aTime === bTime) {
+                // consistent, pseudo-randomizing sort
+                return a.hash - b.hash;
+            }
             return aTime - bTime;
         });
 
-        return sorted[0];
+        return this.settings.selectionMode === "random"
+            ? pool[Math.floor(Math.random() * pool.length)]
+            : sorted[0];
     }
 
     recordView(cardKey: string) {
@@ -152,7 +154,7 @@ export default class SimpleFlashcardsPlugin extends Plugin {
         });
     }
 
-    showRandomCard() {
+    showFlashCard() {
         const deckPath = this.settings.defaultDeckPath || undefined;
         const card = this.selectCard(deckPath);
 
@@ -164,7 +166,7 @@ export default class SimpleFlashcardsPlugin extends Plugin {
         new FlashcardModal(this.app, this, card, deckPath).open();
     }
 
-    getCardEmbedText(): string | null {
+    createEmbedText(): string | null {
         const deckPath = this.settings.defaultDeckPath || undefined;
         const card = this.selectCard(deckPath);
 
@@ -190,8 +192,8 @@ export default class SimpleFlashcardsPlugin extends Plugin {
         return embedText;
     }
 
-    insertCardEmbed(editor: Editor) {
-        const embedText = this.getCardEmbedText();
+    embedCard(editor: Editor) {
+        const embedText = this.createEmbedText();
 
         if (!embedText) {
             new Notice("No cards available. Check your settings.");

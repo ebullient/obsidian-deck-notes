@@ -12,6 +12,6 @@ export class SimpleFlashcardsApi {
      * @returns The card embed text, or null if no cards available
      */
     embedCard(): string | null {
-        return this.plugin.getCardEmbedText();
+        return this.plugin.createEmbedText();
     }
 }

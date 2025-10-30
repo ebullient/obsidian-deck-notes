@@ -49,9 +49,14 @@ export class CardParser {
                 heading: heading.heading,
                 content: cardContent,
                 key: `${file.path}#${heading.heading}`,
+                hash: this.hash(Math.random()),
             });
         }
 
         return cards;
+    }
+
+    hash(input: number): number {
+        return 31 * input;
     }
 }
