@@ -180,7 +180,7 @@ export default class SimpleFlashcardsPlugin extends Plugin {
             .map((line) => `> ${line}`);
 
         const embedText = [
-            `> [!${this.settings.calloutType}]+ ${card.heading}`,
+            `> [!${this.settings.calloutType}]- ${card.heading}`,
             ...contentLines,
         ].join("\n");
 
