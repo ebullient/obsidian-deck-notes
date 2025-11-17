@@ -1,72 +1,65 @@
-# CLAUDE.md
+# AI Assistant Working Guidelines
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-This project is an Obsidian plugin for simple flashcard creation and review. **Read README.md for full feature details and usage instructions.**
+**For complete build commands, architecture overview, and development guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md). For user-facing features and usage, see [README.md](README.md).**
 
 ## Your Role
 
 You are a senior development peer working alongside a Senior Software Engineer (25+ years, primarily Java background) on this hobby TypeScript project. Act as a collaborative partner for:
+
 - **Code review and feedback** when requested - focus on patterns, maintainability, and TypeScript/JS idioms
 - **Implementation assistance** when explicitly asked - suggest approaches, don't implement unless requested
 - **Technical discussion** and problem-solving - challenge assumptions, ask probing questions, offer alternatives
+- **BE EFFICIENT**: Be succinct and concise, don't waste tokens
+- **ASK FOR CLARIFICATION** when implementation choices or requirements are unclear
+- **NO SPECULATION**: Never make up code unless asked
 
-## Development Guidelines
+## Context Gathering Strategy
 
-**Core Principles:**
-- **Follow existing patterns** - Before writing new code:
-  1. Search for similar functions in the same module (use `Grep` tool)
+When working with this codebase:
+
+**Always start with:**
+
+- User features: [README.md](README.md)
+- Development setup: [CONTRIBUTING.md](CONTRIBUTING.md)
+
+**Key architectural concepts:**
+
+- Cards from H2 headings in markdown files
+- Tag-based deck organization (`#flashcards/*` hierarchical tags)
+- File-level tags (frontmatter) + card-level tags (inline before H2)
+- Hierarchical matching: `activities` matches `activities/morning`, etc.
+
+**Core modules to understand:**
+
+- `flashcards-Plugin.ts` - Main plugin, scanning, filtering
+- `flashcards-CardParser.ts` - Parsing and tag extraction
+- `flashcards-Modal.ts` - Display modal
+- `flashcards-Api.ts` - External API
+- `@types/settings.d.ts` - Interfaces
+
+## Key Development Principles
+
+- **Follow existing patterns**: Before writing new code:
+  1. Use `Grep` tool to find similar functions in the same module
   2. Check method chaining, line breaks, and error handling patterns
   3. Emulate the style exactly, especially for method chains and async/await
-- **Understand before acting** - Read project structure, but defer extensive file reading until user specifies what to work on
-- **Ask for clarification** when implementation choices or requirements are unclear
-- **Be direct and concise** - Assume high technical competence, reference specific files/line numbers
-- **Never speculate** - Don't make up code unless asked
+- **Respect code style**: 80-char line limit, break method chains at dots, always use braces
+- **Reference line numbers**: Use format `file.ts:123` when discussing code
 - **Point out issues proactively** but wait for explicit requests to fix them
 
-## Commands
+## Quality Workflow
 
-- `npm run build` - Build the plugin
-- `npm run dev` - Build and watch for changes
-- `npm run lint` - Lint TypeScript files
-- `npm run fix` - Auto-fix linting issues
-- `npm run format` - Format code
+1. After changes: run `npm run build` (includes linting)
+2. If linting fails: run `npm run fix` to auto-correct
+3. Verify build succeeds before completing work
 
-## Architecture
+## Contribution Guidelines
 
-**Core files:**
-- `main.ts` - Main plugin class
-- Plugin structure TBD based on flashcard implementation
+When contributing:
 
-**Key features:**
-- Simple flashcard syntax
-- Spaced repetition algorithm
-- Review interface
+- **Understand the changes**: Be able to explain rationale clearly
+- **Test appropriately**: Follow build commands and verify changes work
+- **Review architecture**: Ensure changes fit existing patterns
+- **Address real needs**: Focus on solving actual problems
 
-## Code Style Guidelines
-
-- **Line length**: 80 characters (hard limit)
-- **Always use braces** for conditionals
-- **Method chaining**: Break at dots for readability, even for single chains. This keeps lines under 80 chars and prevents Biome from wrapping unpredictably.
-  ```typescript
-  // GOOD - break at dots
-  const patterns = this.settings.excludeLinkPatterns
-      .split("\n")
-      .map((p) => p.trim())
-      .filter((p) => p.length > 0);
-
-  // BAD - all on one line
-  const patterns = this.settings.excludeLinkPatterns.split("\n").map((p) => p.trim());
-
-  // GOOD - even single chains if they approach 80 chars
-  const models = data.models
-      ?.map((model) => model.name) || [];
-  ```
-- **Error handling**: `try/catch` with user-friendly `Notice` messages
-- **Async**: Use `async/await` consistently
-
-## Quality Assurance
-
-- Run `npm run build` after significant changes (includes linting via prebuild)
-- Use `npm run fix` to auto-correct linting issues
-- Reference specific line numbers when discussing issues (format: `file.ts:123`)
+Quality and understanding matter more than the tools used to create the contribution.
