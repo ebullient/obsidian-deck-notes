@@ -1,14 +1,15 @@
 export interface Card {
-    hash: number;
+    hash: string;
     filePath: string;
     heading: string;
     content: string;
     key: string; // "filepath#heading" for tracking
+    tags: string[]; // Normalized deck tags (without #flashcards/ prefix)
 }
 
 export interface SimpleFlashcardsSettings {
     cardPaths: string[]; // ["Journal/Coping", "Activities"]
-    defaultDeckPath: string; // Default path for quick command
+    defaultDeckTag: string; // Default tag for deck selection (e.g., "activities")
     trackViews: boolean; // Enable view tracking
     selectionMode: "random" | "least-recent";
     calloutType: string; // Callout type for embedded cards (e.g., "readaloud")

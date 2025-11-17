@@ -5,18 +5,18 @@ import type SimpleFlashcardsPlugin from "./flashcards-Plugin";
 export class FlashcardModal extends Modal {
     plugin: SimpleFlashcardsPlugin;
     card: Card | null;
-    deckPath: string | undefined;
+    deckTag: string | undefined;
 
     constructor(
         app: App,
         plugin: SimpleFlashcardsPlugin,
         card: Card | null,
-        deckPath?: string,
+        deckTag?: string,
     ) {
         super(app);
         this.plugin = plugin;
         this.card = card;
-        this.deckPath = deckPath;
+        this.deckTag = deckTag;
     }
 
     onOpen() {
@@ -61,8 +61,9 @@ export class FlashcardModal extends Modal {
             cls: "modal-button-container",
         });
 
-        // Switch Deck button (only if multiple decks configured)
-        if (this.plugin.settings.cardPaths.length > 1) {
+        // Switch Deck button (only if multiple tags available)
+        const availableTags = this.plugin.api.getTags();
+        if (availableTags.length > 1) {
             new ButtonComponent(buttonContainer)
                 .setButtonText("Switch Deck")
                 .onClick(() => {
@@ -100,17 +101,17 @@ export class FlashcardModal extends Modal {
     }
 
     private showDeckSwitcher() {
-        const availableDecks = this.plugin.settings.cardPaths;
-        if (availableDecks.length === 0) {
+        const availableTags = this.plugin.api.getTags();
+        if (availableTags.length === 0) {
             return;
         }
 
-        // Simple approach: cycle through available decks
-        const currentIndex = this.deckPath
-            ? availableDecks.indexOf(this.deckPath)
+        // Simple approach: cycle through available tags
+        const currentIndex = this.deckTag
+            ? availableTags.indexOf(this.deckTag)
             : -1;
-        const nextIndex = (currentIndex + 1) % availableDecks.length;
-        this.deckPath = availableDecks[nextIndex];
+        const nextIndex = (currentIndex + 1) % availableTags.length;
+        this.deckTag = availableTags[nextIndex];
 
         this.showNextCard();
     }
@@ -122,7 +123,7 @@ export class FlashcardModal extends Modal {
         }
 
         // Select next card
-        this.card = this.plugin.selectCard(this.deckPath);
+        this.card = this.plugin.selectCard(this.deckTag);
         this.display();
     }
 

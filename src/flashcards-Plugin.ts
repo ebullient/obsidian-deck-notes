@@ -119,11 +119,16 @@ export default class SimpleFlashcardsPlugin extends Plugin {
         }
     }
 
-    selectCard(deckPath?: string): Card | null {
+    selectCard(deckTag?: string): Card | null {
         let pool = this.cachedCards;
 
-        if (deckPath) {
-            pool = pool.filter((c) => c.filePath.startsWith(deckPath));
+        if (deckTag) {
+            // Hierarchical matching: "activities" matches "activities/morning"
+            pool = pool.filter((c) =>
+                c.tags.some(
+                    (tag) => tag === deckTag || tag.startsWith(`${deckTag}/`),
+                ),
+            );
         }
 
         if (pool.length === 0) {
@@ -136,7 +141,7 @@ export default class SimpleFlashcardsPlugin extends Plugin {
             const bTime = this.data.cardViews[b.key] || 0;
             if (aTime === bTime) {
                 // consistent, pseudo-randomizing sort
-                return a.hash - b.hash;
+                return a.hash.localeCompare(b.hash);
             }
             return aTime - bTime;
         });
@@ -155,20 +160,20 @@ export default class SimpleFlashcardsPlugin extends Plugin {
     }
 
     showFlashCard() {
-        const deckPath = this.settings.defaultDeckPath || undefined;
-        const card = this.selectCard(deckPath);
+        const deckTag = this.settings.defaultDeckTag || undefined;
+        const card = this.selectCard(deckTag);
 
         if (!card) {
             new Notice("No cards available. Check your settings.");
             return;
         }
 
-        new FlashcardModal(this.app, this, card, deckPath).open();
+        new FlashcardModal(this.app, this, card, deckTag).open();
     }
 
-    createEmbedText(): string | null {
-        const deckPath = this.settings.defaultDeckPath || undefined;
-        const card = this.selectCard(deckPath);
+    createEmbedText(deck: string | undefined): string | null {
+        const deckTag = deck || this.settings.defaultDeckTag;
+        const card = this.selectCard(deckTag);
 
         if (!card) {
             return null;
@@ -192,8 +197,8 @@ export default class SimpleFlashcardsPlugin extends Plugin {
         return embedText;
     }
 
-    embedCard(editor: Editor) {
-        const embedText = this.createEmbedText();
+    embedCard(editor: Editor, deck: string | undefined = undefined) {
+        const embedText = this.createEmbedText(deck);
 
         if (!embedText) {
             new Notice("No cards available. Check your settings.");

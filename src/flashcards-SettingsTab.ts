@@ -83,16 +83,16 @@ export class SimpleFlashcardsSettingsTab extends PluginSettingTab {
             });
 
         new Setting(containerEl)
-            .setName("Default Deck Path")
+            .setName("Default Deck Tag")
             .setDesc(
-                "Default path for 'Show Random Activity Card' command (leave empty for all cards)",
+                "Default tag for 'Show Random Activity Card' command (e.g., 'activities' or 'activities/morning'). Leave empty for all cards.",
             )
             .addText((text) =>
                 text
-                    .setPlaceholder("Journal/Coping")
-                    .setValue(this.newSettings.defaultDeckPath)
+                    .setPlaceholder("activities")
+                    .setValue(this.newSettings.defaultDeckTag)
                     .onChange((value) => {
-                        this.newSettings.defaultDeckPath = value.trim();
+                        this.newSettings.defaultDeckTag = value.trim();
                     }),
             );
 
@@ -147,7 +147,7 @@ export class SimpleFlashcardsSettingsTab extends PluginSettingTab {
             text: "Use --- (horizontal rule) to mark the end of card content. Anything after --- will be ignored.",
         });
         containerEl.createEl("p", {
-            text: "Lines starting with #flashcards will be stripped from card display.",
+            text: "Tag cards with #flashcards/deck-name (e.g., #flashcards/activities/morning). Tags can be in frontmatter or inline before each H2. Lines starting with #flashcards are stripped from display.",
         });
     }
 
