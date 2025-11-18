@@ -2,7 +2,7 @@ import { type App, ButtonComponent, MarkdownRenderer, Modal } from "obsidian";
 import type { Card } from "./@types/settings";
 import type DeckNotesPlugin from "./dn-Plugin";
 
-export class FlashcardModal extends Modal {
+export class CardModal extends Modal {
     plugin: DeckNotesPlugin;
     card: Card | null;
     deckTag: string | undefined;
@@ -40,14 +40,16 @@ export class FlashcardModal extends Modal {
 
         // Render card content as markdown
         const contentDiv = contentEl.createEl("div", {
-            cls: "flashcard-content",
+            cls: "card-content",
         });
 
-        MarkdownRenderer.render(
+        // Modal lifecycle is tied to plugin, safe to use as component
+        void MarkdownRenderer.render(
             this.app,
             this.card.content,
             contentDiv,
             this.card.filePath,
+            // eslint-disable-next-line obsidianmd/no-plugin-as-component
             this.plugin,
         );
 
@@ -65,7 +67,7 @@ export class FlashcardModal extends Modal {
         const availableTags = this.plugin.api.getTags();
         if (availableTags.length > 1) {
             new ButtonComponent(buttonContainer)
-                .setButtonText("Switch Deck")
+                .setButtonText("Switch deck")
                 .onClick(() => {
                     this.showDeckSwitcher();
                 });
@@ -73,7 +75,7 @@ export class FlashcardModal extends Modal {
 
         // Next Card button
         new ButtonComponent(buttonContainer)
-            .setButtonText("Next Card")
+            .setButtonText("Next card")
             .setCta()
             .onClick(() => {
                 this.showNextCard();

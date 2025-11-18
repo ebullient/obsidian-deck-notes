@@ -13,7 +13,7 @@ export class DeckNotesApi {
      * @param deck Tag for deck selection (e.g., "activities")
      * @returns The card embed text, or null if no cards available
      */
-    embedCard(deck: string | undefined = undefined): string | null {
+    embedCard(deck?: string): string | null {
         return this.plugin.createEmbedText(deck);
     }
 

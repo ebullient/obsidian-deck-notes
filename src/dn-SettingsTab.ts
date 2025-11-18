@@ -17,7 +17,9 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
     }
 
     private cloneSettings(): DeckNotesSettings {
-        return JSON.parse(JSON.stringify(this.plugin.settings));
+        return JSON.parse(
+            JSON.stringify(this.plugin.settings),
+        ) as DeckNotesSettings;
     }
 
     async reset() {
@@ -36,14 +38,14 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
         new Setting(containerEl).setHeading().setName("Deck Notes");
 
         new Setting(containerEl)
-            .setName("Save Settings")
+            .setName("Save settings")
             .setClass("decknotes-save-reset")
             .addButton((button) =>
                 button
                     .setButtonText("Reset")
                     .setTooltip("Reset to current saved settings")
-                    .onClick(() => {
-                        this.reset();
+                    .onClick(async () => {
+                        await this.reset();
                     }),
             )
             .addButton((button) =>
@@ -61,13 +63,13 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
         });
 
         new Setting(containerEl)
-            .setName("Card Paths")
+            .setName("Card paths")
             .setDesc(
                 "Paths to folders containing card files (one per line, relative to vault root)",
             )
             .addTextArea((text) =>
                 text
-                    .setPlaceholder("Journal/Coping\nActivities/Morning")
+                    .setPlaceholder("journal/coping\nactivities/morning")
                     .setValue(this.newSettings.cardPaths.join("\n"))
                     .onChange((value) => {
                         this.newSettings.cardPaths = value
@@ -83,13 +85,13 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
             });
 
         new Setting(containerEl)
-            .setName("Default Deck Tag")
+            .setName("Default deck tag")
             .setDesc(
                 "Default tag for 'Show Random Activity Card' command (e.g., 'activities' or 'activities/morning'). Leave empty for all cards.",
             )
             .addText((text) =>
                 text
-                    .setPlaceholder("activities")
+                    .setPlaceholder("Activities")
                     .setValue(this.newSettings.defaultDeckTag)
                     .onChange((value) => {
                         this.newSettings.defaultDeckTag = value.trim();
@@ -97,7 +99,7 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
             );
 
         new Setting(containerEl)
-            .setName("Track Views")
+            .setName("Track views")
             .setDesc(
                 "Track when cards were last viewed (enables least-recent selection)",
             )
@@ -110,12 +112,12 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
             );
 
         new Setting(containerEl)
-            .setName("Selection Mode")
+            .setName("Selection mode")
             .setDesc("How to select cards to display")
             .addDropdown((dropdown) =>
                 dropdown
                     .addOption("random", "Random")
-                    .addOption("least-recent", "Least Recently Viewed")
+                    .addOption("least-recent", "Least recently viewed")
                     .setValue(this.newSettings.selectionMode)
                     .onChange((value) => {
                         this.newSettings.selectionMode = value as
@@ -125,13 +127,13 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
             );
 
         new Setting(containerEl)
-            .setName("Callout Type")
+            .setName("Callout type")
             .setDesc(
                 "Callout type for embedded cards (e.g., note, tip, warning)",
             )
             .addText((text) =>
                 text
-                    .setPlaceholder("readaloud")
+                    .setPlaceholder("example")
                     .setValue(this.newSettings.calloutType)
                     .onChange((value) => {
                         this.newSettings.calloutType = value.trim();
@@ -153,6 +155,6 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
 
     /** Save on exit */
     hide(): void {
-        this.save();
+        void this.save();
     }
 }

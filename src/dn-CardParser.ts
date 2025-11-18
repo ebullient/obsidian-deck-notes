@@ -80,12 +80,26 @@ export class CardParser {
      */
     extractFileLevelTags(fileCache: CachedMetadata | null): string[] {
         const tags: string[] = [];
-        const frontmatterTags = fileCache?.frontmatter?.tags || [];
+        const frontmatterTags = fileCache?.frontmatter?.tags as
+            | string[]
+            | Record<string, unknown>
+            | undefined;
 
-        for (const tag of frontmatterTags) {
-            const normalized = this.normalizeTag(tag);
-            if (normalized) {
-                tags.push(normalized);
+        if (!frontmatterTags) {
+            return tags;
+        }
+
+        // Handle both array and object formats
+        const tagList = Array.isArray(frontmatterTags)
+            ? frontmatterTags
+            : Object.keys(frontmatterTags);
+
+        for (const tag of tagList) {
+            if (typeof tag === "string") {
+                const normalized = this.normalizeTag(tag);
+                if (normalized) {
+                    tags.push(normalized);
+                }
             }
         }
 

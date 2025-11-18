@@ -3,7 +3,7 @@ import type { Card, DeckNotesData, DeckNotesSettings } from "./@types/settings";
 import { DeckNotesApi } from "./dn-Api";
 import { CardParser } from "./dn-CardParser";
 import { DEFAULT_SETTINGS } from "./dn-Constants";
-import { FlashcardModal } from "./dn-Modal";
+import { CardModal } from "./dn-Modal";
 import { DeckNotesSettingsTab } from "./dn-SettingsTab";
 
 export default class DeckNotesPlugin extends Plugin {
@@ -14,7 +14,7 @@ export default class DeckNotesPlugin extends Plugin {
     api!: DeckNotesApi;
 
     async onload() {
-        console.log("Loading Deck Notes plugin");
+        console.debug("Loading Deck Notes plugin", `v${this.manifest.version}`);
 
         await this.loadSettings();
         this.cardParser = new CardParser(this.app);
@@ -32,38 +32,38 @@ export default class DeckNotesPlugin extends Plugin {
             }
             window.deckNotes.api = this.api;
 
-            // Command: Show Random Card
+            // Command: Show card
             this.addCommand({
                 id: "show-card",
-                name: "Show Card",
+                name: "Show card",
                 callback: () => {
-                    this.showFlashCard();
+                    this.showCard();
                 },
             });
 
             // Command: Embed Card
             this.addCommand({
                 id: "embed-card",
-                name: "Embed Card",
+                name: "Embed card",
                 editorCallback: (editor) => {
                     this.embedCard(editor);
                 },
             });
 
-            // Command: Refresh Cards
+            // Command: Refresh cards
             this.addCommand({
                 id: "refresh-cards",
-                name: "Refresh Cards",
+                name: "Refresh cards",
                 callback: async () => {
                     await this.scanCards();
-                    new Notice("Flash cards refreshed");
+                    new Notice("Cards refreshed");
                 },
             });
         });
     }
 
     onunload() {
-        console.log("Unloading Deck Notes plugin");
+        console.debug("Unloading Deck Notes plugin");
 
         // Clear API reference
         if (window.deckNotes) {
@@ -72,7 +72,7 @@ export default class DeckNotesPlugin extends Plugin {
     }
 
     async loadSettings() {
-        const data = await this.loadData();
+        const data = (await this.loadData()) as DeckNotesData;
         this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
         this.data = data || { cardViews: {} };
     }
@@ -101,7 +101,7 @@ export default class DeckNotesPlugin extends Plugin {
             }
         }
 
-        console.log(`Scanned ${this.cachedCards.length} cards`);
+        console.debug(`Scanned ${this.cachedCards.length} cards`);
     }
 
     private async scanFolder(folder: TFolder) {
@@ -131,31 +131,33 @@ export default class DeckNotesPlugin extends Plugin {
             return null;
         }
 
-        // least-recent: sort by lastSeen timestamp
+        if (this.settings.selectionMode === "random") {
+            return pool[Math.floor(Math.random() * pool.length)];
+        }
+
+        // Least-recent: sort by lastSeen timestamp
         const sorted = pool.slice().sort((a, b) => {
             const aTime = this.data.cardViews[a.key] || 0;
             const bTime = this.data.cardViews[b.key] || 0;
             if (aTime === bTime) {
-                // consistent, pseudo-randomizing sort
+                // Consistent, pseudo-randomizing sort
                 return a.hash.localeCompare(b.hash);
             }
             return aTime - bTime;
         });
 
-        return this.settings.selectionMode === "random"
-            ? pool[Math.floor(Math.random() * pool.length)]
-            : sorted[0];
+        return sorted[0];
     }
 
     recordView(cardKey: string) {
         this.data.cardViews[cardKey] = Date.now();
-        this.saveData({
+        void this.saveData({
             ...this.settings,
             cardViews: this.data.cardViews,
         });
     }
 
-    showFlashCard() {
+    showCard() {
         const deckTag = this.settings.defaultDeckTag || undefined;
         const card = this.selectCard(deckTag);
 
@@ -164,10 +166,10 @@ export default class DeckNotesPlugin extends Plugin {
             return;
         }
 
-        new FlashcardModal(this.app, this, card, deckTag).open();
+        new CardModal(this.app, this, card, deckTag).open();
     }
 
-    createEmbedText(deck: string | undefined): string | null {
+    createEmbedText(deck?: string): string | null {
         const deckTag = deck || this.settings.defaultDeckTag;
         const card = this.selectCard(deckTag);
 
@@ -193,7 +195,7 @@ export default class DeckNotesPlugin extends Plugin {
         return embedText;
     }
 
-    embedCard(editor: Editor, deck: string | undefined = undefined) {
+    embedCard(editor: Editor, deck?: string) {
         const embedText = this.createEmbedText(deck);
 
         if (!embedText) {
