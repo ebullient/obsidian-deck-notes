@@ -1,7 +1,7 @@
 {
 	"id": "deck-notes",
 	"name": "Deck Notes",
-	"version": "0.7.0",
+	"version": "0.7.1",
 	"minAppVersion": "1.9.0",
 	"description": "Define card decks for activities, strategies, or any content you want to rotate through. Embed cards in your notes or browse them in a modal. Filter by tag hierarchies to narrow your selection.",
 	"author": "ebullient",
