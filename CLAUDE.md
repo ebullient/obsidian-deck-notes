@@ -31,10 +31,10 @@ When working with this codebase:
 
 **Core modules to understand:**
 
-- `flashcards-Plugin.ts` - Main plugin, scanning, filtering
-- `flashcards-CardParser.ts` - Parsing and tag extraction
-- `flashcards-Modal.ts` - Display modal
-- `flashcards-Api.ts` - External API
+- `dn-Plugin.ts` - Main plugin, scanning, filtering
+- `dn-CardParser.ts` - Parsing and tag extraction
+- `dn-Modal.ts` - Display modal
+- `dn-Api.ts` - External API
 - `@types/settings.d.ts` - Interfaces
 
 ## Key Development Principles

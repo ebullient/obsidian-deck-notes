@@ -1,6 +1,6 @@
-import type { SimpleFlashcardsSettings } from "./@types/settings";
+import type { DeckNotesSettings } from "./@types/settings";
 
-export const DEFAULT_SETTINGS: SimpleFlashcardsSettings = {
+export const DEFAULT_SETTINGS: DeckNotesSettings = {
     cardPaths: [],
     defaultDeckTag: "",
     trackViews: true,

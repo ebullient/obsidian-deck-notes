@@ -1,6 +1,6 @@
-# Contributing to Simple Flashcards
+# Contributing to Deck Notes
 
-This is an Obsidian plugin for simple flashcard creation and review using tag-based deck organization. See [README.md](README.md) for user-facing features and usage.
+This is an Obsidian plugin for tag-based card decks. Define cards for activities, strategies, or any content you want to rotate through. See [README.md](README.md) for user-facing features and usage.
 
 ## Development Commands
 
@@ -16,11 +16,11 @@ npm run format     # Format code
 
 ### Core Files
 
-- **`flashcards-Plugin.ts`** - Main plugin class, card scanning, deck filtering
-- **`flashcards-CardParser.ts`** - Parses markdown files into cards, extracts tags
-- **`flashcards-Modal.ts`** - Card display modal with deck switching
-- **`flashcards-Api.ts`** - JavaScript API for external access
-- **`flashcards-SettingsTab.ts`** - Settings UI
+- **`dn-Plugin.ts`** - Main plugin class, card scanning, deck filtering
+- **`dn-CardParser.ts`** - Parses markdown files into cards, extracts tags
+- **`dn-Modal.ts`** - Card display modal with deck switching
+- **`dn-Api.ts`** - JavaScript API for external access
+- **`dn-SettingsTab.ts`** - Settings UI
 - **`@types/settings.d.ts`** - TypeScript interfaces
 
 ### Key Concepts

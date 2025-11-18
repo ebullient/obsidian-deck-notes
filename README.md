@@ -1,6 +1,6 @@
-# Simple Flashcards
+# Deck Notes
 
-A simple activity card plugin for Obsidian. Display random cards from your markdown files for meditations, prompts, exercises, or any repeatable activities.
+Define card decks for activities, strategies, or any content you want to rotate through. Embed cards in your notes or browse them in a modal. Filter by tag hierarchies to narrow your selection.
 
 ## Features
 
@@ -15,20 +15,22 @@ A simple activity card plugin for Obsidian. Display random cards from your markd
 ### Manual Installation
 
 1. Download the latest release from the [Releases page](https://github.com/ebullient/obsidian-flashcards/releases)
-2. Extract the files into your vault's plugins folder: `<vault>/.obsidian/plugins/simple-flashcards/`
+2. Extract the files into your vault's plugins folder: `<vault>/.obsidian/plugins/deck-notes/`
 3. Reload Obsidian
 4. Enable the plugin in Settings → Community Plugins
 
 ### Development Installation
 
 1. Clone this repository into your vault's plugins folder:
+
    ```bash
    cd <vault>/.obsidian/plugins
-   git clone https://github.com/ebullient/obsidian-flashcards.git simple-flashcards
-   cd simple-flashcards
+   git clone https://github.com/ebullient/obsidian-flashcards.git deck-notes
+   cd deck-notes
    ```
 
 2. Install dependencies and build:
+
    ```bash
    npm install
    npm run build
@@ -95,42 +97,51 @@ Repeat 4 times.
 
 ## Configuration
 
-Open Settings → Simple Flashcards to configure:
+Open Settings → Deck Notes to configure:
 
 ### Card Paths
+
 List of folders or files to scan for cards (one per line, relative to vault root). This defines which files are scanned, not which cards are displayed.
 
 Example:
-```
+
+```txt
 Activities/Exercises
 Daily/Prompts
 Resources/Meditations.md
 ```
 
 ### Default Deck Tag
+
 The default tag used by "Show Random Activity Card" command (e.g., `activities` or `activities/morning`). Leave empty to select from all cards with any `#flashcards/*` tag.
 
 ### Track Views
+
 Enable tracking of when cards were last viewed. Required for "Least Recently Viewed" selection mode.
 
 ### Selection Mode
+
 - **Random** - Pure random selection
 - **Least Recently Viewed** - Prioritizes cards you haven't seen recently
 
 ## Commands
 
 ### Show Card
+
 Opens a modal displaying a card from your default deck (or all cards if no default is set).
 
 **Modal Controls:**
+
 - **Switch Deck** - Cycle through discovered deck tags (e.g., `activities`, `activities/morning`)
 - **Next Card** - View another card (records the current card as viewed)
 - **Done** - Close the modal
 
 ### Embed Card
+
 Inserts a card as a collapsible callout at the cursor position.
 
 ### Refresh Cards
+
 Rescans all configured paths to pick up new or modified cards.
 
 ## Usage Tips
@@ -140,12 +151,14 @@ Rescans all configured paths to pick up new or modified cards.
 Cards are organized into decks using hierarchical `#flashcards/*` tags. Tags support hierarchy, so selecting `activities` will show cards tagged with `activities`, `activities/morning`, `activities/creative`, etc.
 
 **Tag inheritance:**
+
 - Tags in frontmatter apply to all cards in the file
 - Tags before each H2 heading apply only to that card
 - Cards can have multiple tags for multiple deck membership
 
 **Example structure:**
-```
+
+```txt
 Activities/stretches.md → All cards get #flashcards/activities from frontmatter
   Card 1: Also tagged #flashcards/activities/morning
   Card 2: Also tagged #flashcards/activities/evening
@@ -158,6 +171,7 @@ Journal/prompts.md → All cards get #flashcards/creative from frontmatter
 ### View Tracking
 
 With "Track Views" enabled and "Least Recently Viewed" selection mode, the plugin ensures you see all cards before repeating. Perfect for:
+
 - Daily meditation rotations
 - Exercise variety
 - Prompt cycling
@@ -165,6 +179,7 @@ With "Track Views" enabled and "Least Recently Viewed" selection mode, the plugi
 ### Tags for Deck Organization
 
 Use hierarchical `#flashcards/*` tags to organize cards:
+
 - Add tags in frontmatter: `tags: [flashcards/activities]` (applies to all cards in file)
 - Add inline tags before H2 headings: `#flashcards/activities/morning` (applies to single card)
 - Lines starting with `#flashcards` are automatically stripped from card display
@@ -172,20 +187,20 @@ Use hierarchical `#flashcards/*` tags to organize cards:
 
 ### API Access
 
-The plugin exposes a JavaScript API at `window.simpleFlashcards.api`:
+The plugin exposes a JavaScript API at `window.deckNotes.api`:
 
 ```javascript
 // Get a random card embed
-window.simpleFlashcards.api.embedCard('activities')
+window.deckNotes.api.embedCard('activities')
 
 // Get all discovered deck tags
-window.simpleFlashcards.api.getTags()
+window.deckNotes.api.getTags()
 
 // Select cards by hash
-window.simpleFlashcards.api.selectCardsByHash(['card-hash-1', 'card-hash-2'])
+window.deckNotes.api.selectCardsByHash(['card-hash-1', 'card-hash-2'])
 
 // Get random card from hash list
-window.simpleFlashcards.api.selectCardByHash(['card-hash-1', 'card-hash-2'])
+window.deckNotes.api.selectCardByHash(['card-hash-1', 'card-hash-2'])
 ```
 
 ## Development
@@ -202,15 +217,15 @@ npm run format     # Format code
 
 ### Project Structure
 
-```
+```txt
 src/
   ├── @types/
   │   └── settings.d.ts          # TypeScript interfaces
-  ├── flashcards-Plugin.ts       # Main plugin class
-  ├── flashcards-CardParser.ts   # Parse files into cards
-  ├── flashcards-Modal.ts        # Card display modal
-  ├── flashcards-SettingsTab.ts  # Settings UI
-  ├── flashcards-Constants.ts    # Default settings
+  ├── dn-Plugin.ts       # Main plugin class
+  ├── dn-CardParser.ts   # Parse files into cards
+  ├── dn-Modal.ts        # Card display modal
+  ├── dn-SettingsTab.ts  # Settings UI
+  ├── dn-Constants.ts    # Default settings
   └── main.ts                    # Entry point
 ```
 

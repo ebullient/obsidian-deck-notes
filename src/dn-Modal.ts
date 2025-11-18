@@ -1,15 +1,15 @@
 import { type App, ButtonComponent, MarkdownRenderer, Modal } from "obsidian";
 import type { Card } from "./@types/settings";
-import type SimpleFlashcardsPlugin from "./flashcards-Plugin";
+import type DeckNotesPlugin from "./dn-Plugin";
 
 export class FlashcardModal extends Modal {
-    plugin: SimpleFlashcardsPlugin;
+    plugin: DeckNotesPlugin;
     card: Card | null;
     deckTag: string | undefined;
 
     constructor(
         app: App,
-        plugin: SimpleFlashcardsPlugin,
+        plugin: DeckNotesPlugin,
         card: Card | null,
         deckTag?: string,
     ) {

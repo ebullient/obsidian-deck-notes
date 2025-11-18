@@ -1,12 +1,12 @@
 import { type App, PluginSettingTab, Setting } from "obsidian";
-import type { SimpleFlashcardsSettings } from "./@types/settings";
-import type SimpleFlashcardsPlugin from "./flashcards-Plugin";
+import type { DeckNotesSettings } from "./@types/settings";
+import type DeckNotesPlugin from "./dn-Plugin";
 
-export class SimpleFlashcardsSettingsTab extends PluginSettingTab {
-    plugin: SimpleFlashcardsPlugin;
-    newSettings!: SimpleFlashcardsSettings;
+export class DeckNotesSettingsTab extends PluginSettingTab {
+    plugin: DeckNotesPlugin;
+    newSettings!: DeckNotesSettings;
 
-    constructor(app: App, plugin: SimpleFlashcardsPlugin) {
+    constructor(app: App, plugin: DeckNotesPlugin) {
         super(app, plugin);
         this.plugin = plugin;
     }
@@ -16,7 +16,7 @@ export class SimpleFlashcardsSettingsTab extends PluginSettingTab {
         await this.plugin.saveSettings();
     }
 
-    private cloneSettings(): SimpleFlashcardsSettings {
+    private cloneSettings(): DeckNotesSettings {
         return JSON.parse(JSON.stringify(this.plugin.settings));
     }
 
@@ -33,11 +33,11 @@ export class SimpleFlashcardsSettingsTab extends PluginSettingTab {
         const { containerEl } = this;
         containerEl.empty();
 
-        new Setting(containerEl).setHeading().setName("Simple Flashcards");
+        new Setting(containerEl).setHeading().setName("Deck Notes");
 
         new Setting(containerEl)
             .setName("Save Settings")
-            .setClass("flashcards-save-reset")
+            .setClass("decknotes-save-reset")
             .addButton((button) =>
                 button
                     .setButtonText("Reset")

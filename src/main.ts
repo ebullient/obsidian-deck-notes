@@ -1,3 +1,3 @@
-import SimpleFlashcardsPlugin from "./flashcards-Plugin";
+import DeckNotesPlugin from "./dn-Plugin";
 
-export default SimpleFlashcardsPlugin;
+export default DeckNotesPlugin;

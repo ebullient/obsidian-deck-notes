@@ -1,10 +1,10 @@
 import type { Card } from "./@types/settings";
-import type SimpleFlashcardsPlugin from "./flashcards-Plugin";
+import type DeckNotesPlugin from "./dn-Plugin";
 
-export class SimpleFlashcardsApi {
-    plugin: SimpleFlashcardsPlugin;
+export class DeckNotesApi {
+    plugin: DeckNotesPlugin;
 
-    constructor(plugin: SimpleFlashcardsPlugin) {
+    constructor(plugin: DeckNotesPlugin) {
         this.plugin = plugin;
     }
 

@@ -1,8 +1,8 @@
 {
-  "name": "simple-flashcards",
+  "name": "deck-notes",
   "version": "0.1.0",
   "private": true,
-  "description": "Simple flashcard plugin for Obsidian (https://obsidian.md)",
+  "description": "Define card decks for activities, strategies, or any content you want to rotate through. Embed cards in your notes or browse them in a modal. Filter by tag hierarchies to narrow your selection.",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",

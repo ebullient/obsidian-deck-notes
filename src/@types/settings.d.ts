@@ -7,7 +7,7 @@ export interface Card {
     tags: string[]; // Normalized deck tags (without #flashcards/ prefix)
 }
 
-export interface SimpleFlashcardsSettings {
+export interface DeckNotesSettings {
     cardPaths: string[]; // ["Journal/Coping", "Activities"]
     defaultDeckTag: string; // Default tag for deck selection (e.g., "activities")
     trackViews: boolean; // Enable view tracking
@@ -15,6 +15,6 @@ export interface SimpleFlashcardsSettings {
     calloutType: string; // Callout type for embedded cards (e.g., "readaloud")
 }
 
-export interface SimpleFlashcardsData {
+export interface DeckNotesData {
     cardViews: Record<string, number>; // "file.md#heading" → timestamp
 }

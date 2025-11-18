@@ -1,40 +1,36 @@
 import { type Editor, Notice, Plugin, TFile, TFolder } from "obsidian";
-import type {
-    Card,
-    SimpleFlashcardsData,
-    SimpleFlashcardsSettings,
-} from "./@types/settings";
-import { SimpleFlashcardsApi } from "./flashcards-Api";
-import { CardParser } from "./flashcards-CardParser";
-import { DEFAULT_SETTINGS } from "./flashcards-Constants";
-import { FlashcardModal } from "./flashcards-Modal";
-import { SimpleFlashcardsSettingsTab } from "./flashcards-SettingsTab";
+import type { Card, DeckNotesData, DeckNotesSettings } from "./@types/settings";
+import { DeckNotesApi } from "./dn-Api";
+import { CardParser } from "./dn-CardParser";
+import { DEFAULT_SETTINGS } from "./dn-Constants";
+import { FlashcardModal } from "./dn-Modal";
+import { DeckNotesSettingsTab } from "./dn-SettingsTab";
 
-export default class SimpleFlashcardsPlugin extends Plugin {
-    settings!: SimpleFlashcardsSettings;
-    data!: SimpleFlashcardsData;
+export default class DeckNotesPlugin extends Plugin {
+    settings!: DeckNotesSettings;
+    data!: DeckNotesData;
     cachedCards: Card[] = [];
     cardParser!: CardParser;
-    api!: SimpleFlashcardsApi;
+    api!: DeckNotesApi;
 
     async onload() {
-        console.log("Loading Simple Flashcards plugin");
+        console.log("Loading Deck Notes plugin");
 
         await this.loadSettings();
         this.cardParser = new CardParser(this.app);
 
-        this.addSettingTab(new SimpleFlashcardsSettingsTab(this.app, this));
+        this.addSettingTab(new DeckNotesSettingsTab(this.app, this));
 
         // Defer initial card scan, API, and command registration to avoid blocking startup
         this.app.workspace.onLayoutReady(async () => {
             await this.scanCards();
 
             // Initialize API
-            this.api = new SimpleFlashcardsApi(this);
-            if (!window.simpleFlashcards) {
-                window.simpleFlashcards = {};
+            this.api = new DeckNotesApi(this);
+            if (!window.deckNotes) {
+                window.deckNotes = {};
             }
-            window.simpleFlashcards.api = this.api;
+            window.deckNotes.api = this.api;
 
             // Command: Show Random Card
             this.addCommand({
@@ -67,11 +63,11 @@ export default class SimpleFlashcardsPlugin extends Plugin {
     }
 
     onunload() {
-        console.log("Unloading Simple Flashcards plugin");
+        console.log("Unloading Deck Notes plugin");
 
         // Clear API reference
-        if (window.simpleFlashcards) {
-            window.simpleFlashcards.api = undefined;
+        if (window.deckNotes) {
+            window.deckNotes.api = undefined;
         }
     }
 

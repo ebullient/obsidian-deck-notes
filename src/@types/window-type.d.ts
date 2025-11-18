@@ -1,9 +1,9 @@
-import type { SimpleFlashcardsApi } from "../flashcards-Api";
+import type { DeckNotesApi } from "../dn-Api";
 
 declare global {
     interface Window {
-        simpleFlashcards?: {
-            api?: SimpleFlashcardsApi;
+        deckNotes?: {
+            api?: DeckNotesApi;
         };
     }
 }
