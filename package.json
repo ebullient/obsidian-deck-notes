@@ -25,7 +25,7 @@
     "flashcards"
   ],
   "author": "ebullient",
-  "repository": "github.com:ebullient/obsidian-flashcards",
+  "repository": "github.com:ebullient/obsidian-deck-notes",
   "license": "MIT",
   "devDependencies": {
     "@biomejs/biome": "2.2.6",
@@ -44,6 +44,10 @@
   "auto-changelog": {
     "backfillLimit": false,
     "commitLimit": false,
-    "ignoreCommitPattern": "(🔖|🔨|🧹|changelog|release|Update README).*"
+    "ignoreCommitPattern": "(🔖|🔨|🧹|changelog|release|Update README).*",
+    "replaceText": {
+        "([;.,] [rR]esolves) #\\d+\\.?\\s*$": "$1",
+        "([;.,] [Ff]ixes) #\\d+\\.?\\s*$": "$1"
+    }
   }
 }
