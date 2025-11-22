@@ -220,7 +220,7 @@ npm run format     # Format code
 ```txt
 src/
   ├── @types/
-  │   └── settings.d.ts          # TypeScript interfaces
+  │   └── settings.d.ts  # TypeScript interfaces
   ├── dn-Plugin.ts       # Main plugin class
   ├── dn-CardParser.ts   # Parse files into cards
   ├── dn-Modal.ts        # Card display modal

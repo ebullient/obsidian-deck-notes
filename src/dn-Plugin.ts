@@ -1,4 +1,11 @@
-import { type Editor, Notice, Plugin, TFile, TFolder } from "obsidian";
+import {
+    debounce,
+    type Editor,
+    Notice,
+    Plugin,
+    TFile,
+    TFolder,
+} from "obsidian";
 import type { Card, DeckNotesData, DeckNotesSettings } from "./@types/settings";
 import { DeckNotesApi } from "./dn-Api";
 import { CardParser } from "./dn-CardParser";
@@ -12,7 +19,6 @@ export default class DeckNotesPlugin extends Plugin {
     cachedCards: Card[] = [];
     cardParser!: CardParser;
     api!: DeckNotesApi;
-    saveViewsTimer: NodeJS.Timeout | null = null;
 
     async onload() {
         console.debug("Loading Deck Notes plugin", `v${this.manifest.version}`);
@@ -68,10 +74,8 @@ export default class DeckNotesPlugin extends Plugin {
         console.debug("Unloading Deck Notes plugin");
 
         // Flush any pending view saves
-        if (this.saveViewsTimer) {
-            clearTimeout(this.saveViewsTimer);
-            void this.saveViews();
-        }
+        this.debouncedSaveViews.cancel();
+        void this.saveViews();
 
         // Clear API reference
         if (window.deckNotes) {
@@ -91,6 +95,21 @@ export default class DeckNotesPlugin extends Plugin {
             cardViews: this.data.cardViews,
         });
         await this.scanCards();
+    }
+
+    debouncedSaveViews = debounce(
+        async () => {
+            await this.saveViews();
+        },
+        2000,
+        true, // resetTimer: save only after 2s of no new views
+    );
+
+    async saveViews() {
+        await this.saveData({
+            ...this.settings,
+            cardViews: this.data.cardViews,
+        });
     }
 
     async scanCards() {
@@ -159,22 +178,7 @@ export default class DeckNotesPlugin extends Plugin {
 
     recordView(cardKey: string) {
         this.data.cardViews[cardKey] = Date.now();
-
-        // Debounce saves: only write to disk after 2s of no card views
-        if (this.saveViewsTimer) {
-            clearTimeout(this.saveViewsTimer);
-        }
-        this.saveViewsTimer = setTimeout(() => {
-            void this.saveViews();
-        }, 2000);
-    }
-
-    async saveViews() {
-        this.saveViewsTimer = null;
-        await this.saveData({
-            ...this.settings,
-            cardViews: this.data.cardViews,
-        });
+        this.debouncedSaveViews();
     }
 
     showCard() {
