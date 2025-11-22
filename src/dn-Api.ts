@@ -19,7 +19,8 @@ export class DeckNotesApi {
 
     /**
      * Get all unique deck tags discovered in cards
-     * @returns Array of normalized tag strings (e.g., ["activities", "activities/morning"])
+     * @returns Array of normalized tag strings; for example,
+     *          ["activities", "activities/morning"]
      */
     getTags(): string[] {
         const tagsSet = new Set<string>();

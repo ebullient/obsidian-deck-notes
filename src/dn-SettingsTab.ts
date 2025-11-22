@@ -65,7 +65,8 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
         new Setting(containerEl)
             .setName("Card paths")
             .setDesc(
-                "Paths to folders containing card files (one per line, relative to vault root)",
+                "Paths to folders containing card files; " +
+                    "one path relative to vault root per line.",
             )
             .addTextArea((text) =>
                 text
@@ -87,7 +88,9 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
         new Setting(containerEl)
             .setName("Default deck tag")
             .setDesc(
-                "Default tag for 'Show Random Activity Card' command (e.g., 'activities' or 'activities/morning'). Leave empty for all cards.",
+                "Optional tag to narrow the selection of cards " +
+                    "available for 'Show Card' command; for example, " +
+                    "'activities' or 'activities/morning'.",
             )
             .addText((text) =>
                 text
@@ -99,21 +102,11 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
             );
 
         new Setting(containerEl)
-            .setName("Track views")
-            .setDesc(
-                "Track when cards were last viewed (enables least-recent selection)",
-            )
-            .addToggle((toggle) =>
-                toggle
-                    .setValue(this.newSettings.trackViews)
-                    .onChange((value) => {
-                        this.newSettings.trackViews = value;
-                    }),
-            );
-
-        new Setting(containerEl)
             .setName("Selection mode")
-            .setDesc("How to select cards to display")
+            .setDesc(
+                "Cards can be selected at random or based on " +
+                    "when they were last viewed.",
+            )
             .addDropdown((dropdown) =>
                 dropdown
                     .addOption("random", "Random")
@@ -129,7 +122,8 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
         new Setting(containerEl)
             .setName("Callout type")
             .setDesc(
-                "Callout type for embedded cards (e.g., note, tip, warning)",
+                "Callout type for embedded cards; " +
+                    "for example, note, tip, or warning.",
             )
             .addText((text) =>
                 text
@@ -143,13 +137,21 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
         new Setting(containerEl).setHeading().setName("Usage");
 
         containerEl.createEl("p", {
-            text: "Cards are created from markdown files with H2 headings (##). Each heading becomes one card.",
+            text:
+                "Cards are created from markdown files with " +
+                "H2 headings (##). Each heading becomes one card.",
         });
         containerEl.createEl("p", {
-            text: "Use --- (horizontal rule) to mark the end of card content. Anything after --- will be ignored.",
+            text:
+                "Use --- (horizontal rule) to mark the end of " +
+                "card content. Anything after --- will be ignored.",
         });
         containerEl.createEl("p", {
-            text: "Tag cards with #flashcards/deck-name (e.g., #flashcards/activities/morning). Tags can be in frontmatter or inline before each H2. Lines starting with #flashcards are stripped from display.",
+            text:
+                "Tag cards with #flashcards/deck-name; for example, " +
+                "#flashcards/activities/morning. Tags can be in " +
+                "frontmatter or inline before each H2. Lines starting " +
+                "with #flashcards are stripped from display.",
         });
     }
 

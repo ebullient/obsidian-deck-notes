@@ -12,6 +12,7 @@ export default class DeckNotesPlugin extends Plugin {
     cachedCards: Card[] = [];
     cardParser!: CardParser;
     api!: DeckNotesApi;
+    saveViewsTimer: NodeJS.Timeout | null = null;
 
     async onload() {
         console.debug("Loading Deck Notes plugin", `v${this.manifest.version}`);
@@ -21,7 +22,8 @@ export default class DeckNotesPlugin extends Plugin {
 
         this.addSettingTab(new DeckNotesSettingsTab(this.app, this));
 
-        // Defer initial card scan, API, and command registration to avoid blocking startup
+        // Defer initial card scan, API, and command registration
+        // to avoid blocking startup
         this.app.workspace.onLayoutReady(async () => {
             await this.scanCards();
 
@@ -64,6 +66,12 @@ export default class DeckNotesPlugin extends Plugin {
 
     onunload() {
         console.debug("Unloading Deck Notes plugin");
+
+        // Flush any pending view saves
+        if (this.saveViewsTimer) {
+            clearTimeout(this.saveViewsTimer);
+            void this.saveViews();
+        }
 
         // Clear API reference
         if (window.deckNotes) {
@@ -151,7 +159,19 @@ export default class DeckNotesPlugin extends Plugin {
 
     recordView(cardKey: string) {
         this.data.cardViews[cardKey] = Date.now();
-        void this.saveData({
+
+        // Debounce saves: only write to disk after 2s of no card views
+        if (this.saveViewsTimer) {
+            clearTimeout(this.saveViewsTimer);
+        }
+        this.saveViewsTimer = setTimeout(() => {
+            void this.saveViews();
+        }, 2000);
+    }
+
+    async saveViews() {
+        this.saveViewsTimer = null;
+        await this.saveData({
             ...this.settings,
             cardViews: this.data.cardViews,
         });
@@ -188,9 +208,7 @@ export default class DeckNotesPlugin extends Plugin {
         ].join("\n");
 
         // Record as viewed
-        if (this.settings.trackViews) {
-            this.recordView(card.key);
-        }
+        this.recordView(card.key);
 
         return embedText;
     }

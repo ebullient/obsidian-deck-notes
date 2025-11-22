@@ -120,7 +120,7 @@ export class CardModal extends Modal {
 
     private showNextCard() {
         // Record view for current card
-        if (this.card && this.plugin.settings.trackViews) {
+        if (this.card) {
             this.plugin.recordView(this.card.key);
         }
 

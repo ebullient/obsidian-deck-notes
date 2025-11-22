@@ -9,10 +9,9 @@ export interface Card {
 
 export interface DeckNotesSettings {
     cardPaths: string[]; // ["Journal/Coping", "Activities"]
-    defaultDeckTag: string; // Default tag for deck selection (e.g., "activities")
-    trackViews: boolean; // Enable view tracking
+    defaultDeckTag: string; // Default tag for deck selection
     selectionMode: "random" | "least-recent";
-    calloutType: string; // Callout type for embedded cards (e.g., "readaloud")
+    calloutType: string; // Callout type for embedded cards
 }
 
 export interface DeckNotesData {

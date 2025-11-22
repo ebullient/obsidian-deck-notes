@@ -63,6 +63,11 @@ npm run format     # Format code
 
 - **Error handling**: `try/catch` with user-friendly `Notice` messages
 - **Async**: Use `async/await` consistently
+- **UI text (enforced by `obsidianmd/ui/sentence-case`)**:
+    - Use sentence case (capitalize first word only, except proper nouns)
+    - Setting descriptions must be complete sentences ending with periods
+    - Use semicolons to separate related clauses in a single sentence
+    - Avoid parenthetical notes; use semicolons instead
 
 ## Development Patterns
 
