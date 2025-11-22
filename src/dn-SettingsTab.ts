@@ -153,6 +153,15 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
                 "frontmatter or inline before each H2. Lines starting " +
                 "with #flashcards are stripped from display.",
         });
+
+        const div = this.containerEl.createDiv("deck-cards-coffee");
+        div.createEl("a", {
+            href: "https://www.buymeacoffee.com/ebullient",
+        }).createEl("img", {
+            attr: {
+                src: "https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=ebullient&button_colour=8e6787&font_colour=ebebeb&font_family=Inter&outline_colour=392a37&coffee_colour=ecc986",
+            },
+        });
     }
 
     /** Save on exit */

@@ -1,0 +1,7 @@
+.deck-cards-coffee {
+  text-align: center;
+  img {
+    margin: auto;
+    height: 30px;
+  }
+}
