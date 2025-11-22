@@ -1,6 +1,6 @@
 {
   "name": "deck-notes",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "private": true,
   "description": "Define card decks for activities, strategies, or any content you want to rotate through. Embed cards in your notes or browse them in a modal. Filter by tag hierarchies to narrow your selection.",
   "main": "main.js",
@@ -46,8 +46,8 @@
     "commitLimit": false,
     "ignoreCommitPattern": "(🔖|🔨|🧹|changelog|release|Update README).*",
     "replaceText": {
-        "([;.,] [rR]esolves) #\\d+\\.?\\s*$": "$1",
-        "([;.,] [Ff]ixes) #\\d+\\.?\\s*$": "$1"
+      "([;.,] [rR]esolves) #\\d+\\.?\\s*$": "$1",
+      "([;.,] [Ff]ixes) #\\d+\\.?\\s*$": "$1"
     }
   }
 }
