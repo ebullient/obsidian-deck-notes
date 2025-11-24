@@ -28,7 +28,7 @@
   "repository": "github.com:ebullient/obsidian-deck-notes",
   "license": "MIT",
   "devDependencies": {
-    "@biomejs/biome": "2.2.6",
+    "@biomejs/biome": "2.3.0",
     "@types/node": "^24.8.1",
     "@typescript-eslint/parser": "^8.46.4",
     "auto-changelog": "^2.5.0",
