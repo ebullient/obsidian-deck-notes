@@ -9,6 +9,7 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
     constructor(app: App, plugin: DeckNotesPlugin) {
         super(app, plugin);
         this.plugin = plugin;
+        this.icon = "gallery-thumbnails";
     }
 
     async save() {
