@@ -22,7 +22,7 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
         ) as DeckNotesSettings;
     }
 
-    async reset() {
+    reset() {
         this.newSettings = this.cloneSettings();
         this.display();
     }
@@ -35,37 +35,31 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
         const { containerEl } = this;
         containerEl.empty();
 
-        new Setting(containerEl).setHeading().setName("Deck Notes");
-
-        new Setting(containerEl)
+        new Setting(this.containerEl)
             .setName("Save settings")
             .setClass("decknotes-save-reset")
             .addButton((button) =>
                 button
-                    .setButtonText("Reset")
-                    .setTooltip("Reset to current saved settings")
-                    .onClick(async () => {
-                        await this.reset();
+                    .setIcon("reset")
+                    .setTooltip("Reset to previously saved values.")
+                    .onClick(() => {
+                        this.reset();
                     }),
             )
-            .addButton((button) =>
+            .addButton((button) => {
                 button
-                    .setButtonText("Save")
+                    .setIcon("save")
                     .setCta()
                     .setTooltip("Save all changes")
                     .onClick(async () => {
                         await this.save();
-                    }),
-            );
-
-        containerEl.createEl("p", {
-            text: "Configure activity card decks for random selection.",
-        });
+                    });
+            });
 
         new Setting(containerEl)
             .setName("Card paths")
             .setDesc(
-                "Paths to folders containing card files; " +
+                "Paths to folders containing card decks; " +
                     "one path relative to vault root per line.",
             )
             .addTextArea((text) =>

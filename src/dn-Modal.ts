@@ -1,4 +1,10 @@
-import { type App, ButtonComponent, MarkdownRenderer, Modal } from "obsidian";
+import {
+    type App,
+    ButtonComponent,
+    MarkdownRenderChild,
+    MarkdownRenderer,
+    Modal,
+} from "obsidian";
 import type { Card } from "./@types/settings";
 import type DeckNotesPlugin from "./dn-Plugin";
 
@@ -6,6 +12,7 @@ export class CardModal extends Modal {
     plugin: DeckNotesPlugin;
     card: Card | null;
     deckTag: string | undefined;
+    renderer: MarkdownRenderChild;
 
     constructor(
         app: App,
@@ -17,6 +24,7 @@ export class CardModal extends Modal {
         this.plugin = plugin;
         this.card = card;
         this.deckTag = deckTag;
+        this.renderer = new MarkdownRenderChild(this.containerEl);
     }
 
     onOpen() {
@@ -49,8 +57,7 @@ export class CardModal extends Modal {
             this.card.content,
             contentDiv,
             this.card.filePath,
-            // eslint-disable-next-line obsidianmd/no-plugin-as-component
-            this.plugin,
+            this.renderer,
         );
 
         // Add button controls
