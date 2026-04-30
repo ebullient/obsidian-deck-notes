@@ -47,7 +47,7 @@ export class CardModal extends Modal {
         contentEl.createEl("h2", { text: this.card.heading });
 
         // Render card content as markdown
-        const contentDiv = contentEl.createEl("div", {
+        const contentDiv = contentEl.createDiv({
             cls: "card-content",
         });
 
@@ -66,7 +66,7 @@ export class CardModal extends Modal {
 
     private addControls() {
         const { contentEl } = this;
-        const buttonContainer = contentEl.createEl("div", {
+        const buttonContainer = contentEl.createDiv({
             cls: "modal-button-container",
         });
 
@@ -98,7 +98,7 @@ export class CardModal extends Modal {
 
     private addCloseButton() {
         const { contentEl } = this;
-        const buttonContainer = contentEl.createEl("div", {
+        const buttonContainer = contentEl.createDiv({
             cls: "modal-button-container",
         });
 
