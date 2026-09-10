@@ -4,3 +4,14 @@
     height: 30px;
   }
 }
+
+.deck-notes-embed .callout-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.deck-notes-embed .deck-notes-embed-controls {
+  flex-shrink: 0;
+}

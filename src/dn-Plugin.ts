@@ -10,6 +10,7 @@ import type { Card, DeckNotesData, DeckNotesSettings } from "./@types/settings";
 import { DeckNotesApi } from "./dn-Api";
 import { CardParser } from "./dn-CardParser";
 import { DEFAULT_SETTINGS } from "./dn-Constants";
+import { CardEmbed } from "./dn-Embed";
 import { CardModal } from "./dn-Modal";
 import { DeckNotesSettingsTab } from "./dn-SettingsTab";
 
@@ -27,6 +28,19 @@ export default class DeckNotesPlugin extends Plugin {
         this.cardParser = new CardParser(this.app);
 
         this.addSettingTab(new DeckNotesSettingsTab(this.app, this));
+
+        // Embedded card widget: ```deck-notes\ntag1\ntag2\n```
+        this.registerMarkdownCodeBlockProcessor(
+            "deck-notes",
+            (source, el, ctx) => {
+                const deckTags = source
+                    .split("\n")
+                    .map((line) => line.trim())
+                    .filter((line) => line.length > 0);
+
+                ctx.addChild(new CardEmbed(el, this, deckTags, ctx.sourcePath));
+            },
+        );
 
         // Defer initial card scan, API, and command registration
         // to avoid blocking startup
@@ -142,14 +156,22 @@ export default class DeckNotesPlugin extends Plugin {
         }
     }
 
-    selectCard(deckTag?: string): Card | null {
+    selectCard(deckTag?: string | string[]): Card | null {
         let pool = this.cachedCards;
 
-        if (deckTag) {
+        const deckTags = Array.isArray(deckTag)
+            ? deckTag
+            : deckTag
+              ? [deckTag]
+              : [];
+
+        if (deckTags.length > 0) {
             // Hierarchical matching: "activities" matches "activities/morning"
             pool = pool.filter((c) =>
-                c.tags.some(
-                    (tag) => tag === deckTag || tag.startsWith(`${deckTag}/`),
+                c.tags.some((tag) =>
+                    deckTags.some(
+                        (deck) => tag === deck || tag.startsWith(`${deck}/`),
+                    ),
                 ),
             );
         }
