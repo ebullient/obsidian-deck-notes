@@ -1,12 +1,37 @@
 import {
     type App,
     ButtonComponent,
+    FuzzySuggestModal,
     MarkdownRenderChild,
     MarkdownRenderer,
     Modal,
 } from "obsidian";
 import type { Card } from "./@types/settings";
 import type DeckNotesPlugin from "./dn-Plugin";
+
+class DeckSuggestModal extends FuzzySuggestModal<string> {
+    tags: string[];
+    onChoose: (tag: string) => void;
+
+    constructor(app: App, tags: string[], onChoose: (tag: string) => void) {
+        super(app);
+        this.tags = tags;
+        this.onChoose = onChoose;
+        this.setPlaceholder("Switch to deck…");
+    }
+
+    getItems(): string[] {
+        return this.tags;
+    }
+
+    getItemText(tag: string): string {
+        return tag;
+    }
+
+    onChooseItem(tag: string): void {
+        this.onChoose(tag);
+    }
+}
 
 export class CardModal extends Modal {
     plugin: DeckNotesPlugin;
@@ -115,14 +140,10 @@ export class CardModal extends Modal {
             return;
         }
 
-        // Simple approach: cycle through available tags
-        const currentIndex = this.deckTag
-            ? availableTags.indexOf(this.deckTag)
-            : -1;
-        const nextIndex = (currentIndex + 1) % availableTags.length;
-        this.deckTag = availableTags[nextIndex];
-
-        this.showNextCard();
+        new DeckSuggestModal(this.app, availableTags, (tag) => {
+            this.deckTag = tag;
+            this.showNextCard();
+        }).open();
     }
 
     private showNextCard() {
