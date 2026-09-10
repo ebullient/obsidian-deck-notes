@@ -9,6 +9,7 @@ Define card decks for activities, strategies, or any content you want to rotate 
 - **View Tracking** - Optional tracking to prioritize cards you haven't seen recently
 - **Simple Markdown Format** - Use H2 headings to define cards
 - **Switch Decks on the Fly** - Cycle through discovered deck tags within the modal
+- **Live Embedded Card Block** - Embed a self-refreshing random card directly in a note
 
 ## Installation
 
@@ -144,6 +145,21 @@ Inserts a card as a collapsible callout at the cursor position.
 
 Rescans all configured paths to pick up new or modified cards.
 
+## Embedded Deck Block
+
+Embed a live, self-contained card widget in a note using a `deck-notes` code block. Unlike **Embed Card**, which pastes static text, this block re-renders a new card on each note render and includes its own **Next card** button.
+
+````markdown
+```deck-notes
+activities/morning
+```
+````
+
+- List one deck tag per line; a card is shown if it matches **any** listed tag
+- Hierarchical matching applies, same as elsewhere (`activities` matches `activities/morning`)
+- Leave the block empty to use the **Default Deck Tag** from settings
+- Clicking **Next card** records the previous card as viewed and selects another
+
 ## Usage Tips
 
 ### Organizing Cards with Tags
@@ -205,29 +221,7 @@ window.deckNotes.api.selectCardByHash(['card-hash-1', 'card-hash-2'])
 
 ## Development
 
-### Building
-
-```bash
-npm run build      # Production build
-npm run dev        # Watch mode
-npm run lint       # Check for issues
-npm run fix        # Auto-fix linting issues
-npm run format     # Format code
-```
-
-### Project Structure
-
-```txt
-src/
-  ├── @types/
-  │   └── settings.d.ts  # TypeScript interfaces
-  ├── dn-Plugin.ts       # Main plugin class
-  ├── dn-CardParser.ts   # Parse files into cards
-  ├── dn-Modal.ts        # Card display modal
-  ├── dn-SettingsTab.ts  # Settings UI
-  ├── dn-Constants.ts    # Default settings
-  └── main.ts                    # Entry point
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md) for build commands and project architecture.
 
 ## License
 

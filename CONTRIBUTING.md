@@ -19,6 +19,7 @@ npm run format     # Format code
 - **`dn-Plugin.ts`** - Main plugin class, card scanning, deck filtering
 - **`dn-CardParser.ts`** - Parses markdown files into cards, extracts tags
 - **`dn-Modal.ts`** - Card display modal with deck switching
+- **`dn-Embed.ts`** - Embedded `deck-notes` code block widget
 - **`dn-Api.ts`** - JavaScript API for external access
 - **`dn-SettingsTab.ts`** - Settings UI
 - **`@types/settings.d.ts`** - TypeScript interfaces
