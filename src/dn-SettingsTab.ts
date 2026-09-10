@@ -123,9 +123,9 @@ export class DeckNotesSettingsTab extends PluginSettingTab {
                             this.update();
                         }).open(),
                 },
-                onDelete: async (idx: number) => {
+                onDelete: (idx: number) => {
                     this.plugin.settings.cardPaths.splice(idx, 1);
-                    await this.plugin.saveSettings();
+                    void this.plugin.saveSettings();
                     this.update();
                 },
                 items: this.plugin.settings.cardPaths.map((path) => ({
