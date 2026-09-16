@@ -80,6 +80,13 @@ export class CardEmbed extends MarkdownRenderChild {
             this.sourcePath,
             this,
         );
+
+        // TEMP debug: show which deck tag(s) this card matched, to
+        // diagnose multi-deck selection. Remove once confirmed.
+        callout.createDiv({
+            cls: "deck-notes-embed-tags",
+            text: `deck: ${this.card.tags.join(", ")}`,
+        });
     }
 
     private showNextCard() {

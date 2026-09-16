@@ -15,3 +15,8 @@
 .deck-notes-embed .deck-notes-embed-controls {
   flex-shrink: 0;
 }
+
+.deck-notes-embed-tags {
+  padding: var(--callout-content-padding);
+  font-size: var(--font-smaller);
+}
